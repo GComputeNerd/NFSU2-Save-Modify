@@ -49,16 +49,10 @@ io.write("SaveFile Name : ")
 fname = io.read()
 print("")
 
-save = io.open(fname, "r")
-res = io.open("buffer", "w+")
-
-res:write(save:read("*all"))
-
-save:close()
+save = io.open(fname, "w+")
 
 -- Money Offset :- 0xA16A
 
-res:seek("set", tonumber("0xA16A"))
 print("How much money do you want?")
 io.write("(0->4,294,967,295):")
 num = tonumber(io.read())
@@ -71,11 +65,7 @@ if ( num < 0 ) or ( num > 4294967295 ) then
 end
 
 a = getHex(num, 8)
-writeLittleEndian(res, a)
+save:seek("set", tonumber("0xA16A"))
+writeLittleEndian(save, a)
 
-save = io.open(fname, "w")
-res:seek("set", 0)
-save:write(res:read("*all"))
 save:close()
-res:close()
-os.remove("buffer")
